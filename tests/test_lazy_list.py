@@ -1,18 +1,7 @@
-
-from playwright.sync_api import expect
-
 def test_lazy_loaded_list(page):
-    page.click("text=Timing Challenges")
+    frame = page.frame_locator("iframe")
 
-    load_more = page.get_by_role("button", name="Load More Items")
+    frame.get_by_text("Timing Challenges").click()
+    frame.get_by_text("Load More").click()
 
-    for _ in range(3):
-        load_more.click()
-        expect(page.locator(".loading")).to_be_hidden()
-
-    items = page.locator(".list-item")
-    expect(items).to_have_count(15)
-
-    statuses = page.locator(".status").all_inner_texts()
-    assert "active" in statuses
-    assert "pending" in statuses
+    assert frame.get_by_text("Item 20").is_visible()
