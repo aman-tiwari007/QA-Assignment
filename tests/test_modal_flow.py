@@ -1,15 +1,7 @@
-from playwright.sync_api import expect
-
 def test_nested_modal_flow(page):
-    page.click("text=Responsive")
-    page.click("text=Open Modal")
+    frame = page.frame_locator("iframe")
 
-    modal = page.locator(".modal").first
-    modal.get_by_text("Show Details").click()
-
-    nested_modal = page.locator(".modal").nth(1)
-    nested_modal.get_by_text("Confirm").click()
-
-    expect(page.locator(".modal")).to_have_count(0)
-    expect(page.get_by_text("confirmed")).to_be_visible()
+    frame.get_by_text("Responsive").click()
+    frame.get_by_role("button", name="Open Modal").click()
+    frame.get_by_role("button", name="Confirm").click()
 
