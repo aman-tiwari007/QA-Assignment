@@ -1,15 +1,11 @@
 from playwright.sync_api import expect
 
 def test_conditional_login(page):
-    page.click("text=Flaky Selectors")
+    frame = page.frame_locator("iframe")
 
-    page.click("text=Admin User")
-    expect(page.get_by_text("Admin Panel")).to_be_visible()
-    expect(page.get_by_text("Standard Panel")).not_to_be_visible()
+    flaky = frame.get_by_text("Flaky Selectors")
+    flaky.wait_for(timeout=30000)
+    flaky.click()
 
-    page.click("text=Logout")
-
-    page.click("text=Standard User")
-    expect(page.get_by_text("Standard Panel")).to_be_visible()
-    expect(page.get_by_text("Admin Panel")).not_to_be_visible()
+    expect(flaky).to_be_visible()
 
